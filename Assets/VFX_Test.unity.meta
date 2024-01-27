@@ -1,5 +1,9 @@
 fileFormatVersion: 2
+<<<<<<<< Updated upstream:Assets/VFX_Test.unity.meta
 guid: b8050e1912ecd96438c9c0001dc29506
+========
+guid: b12a5f5b748ab734ebdf50b2de20836b
+>>>>>>>> Stashed changes:Assets/Scenes/LevelSergey.unity.meta
 DefaultImporter:
   externalObjects: {}
   userData: 
