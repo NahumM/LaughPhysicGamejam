@@ -14,12 +14,7 @@ public class GrabObjectProperties{
 }
 
 public class GrabIt : MonoBehaviour {
-
-	[Header("Input")]
-	[SerializeField] KeyCode m_rotatePitchPosKey = KeyCode.I;
-	[SerializeField] KeyCode m_rotatePitchNegKey = KeyCode.K;
-	[SerializeField] KeyCode m_rotateYawPosKey = KeyCode.L;
-	[SerializeField] KeyCode m_rotateYawNegKey = KeyCode.J;
+	
 
 	[Header("Grab properties")]
 
@@ -95,14 +90,7 @@ public class GrabIt : MonoBehaviour {
 			m_targetDistance = Mathf.Clamp(m_targetDistance , m_grabMinDistance , m_grabMaxDistance);
 
 			m_targetPos = m_transform.position + m_transform.forward * m_targetDistance;
-						
-			if(!m_isHingeJoint){
-				if(Input.GetKey(m_rotatePitchPosKey) || Input.GetKey(m_rotatePitchNegKey) || Input.GetKey(m_rotateYawPosKey) || Input.GetKey(m_rotateYawNegKey)){
-					m_targetRB.constraints = RigidbodyConstraints.None;
-				}else{
-					m_targetRB.constraints = m_grabProperties.m_constraints;
-				}
-			}
+			
 			
 
 			if( Input.GetMouseButtonUp(0) ){				
@@ -193,29 +181,13 @@ public class GrabIt : MonoBehaviour {
 			m_lineRenderer.SetPositions( new Vector3[]{ m_targetPos , hitPointPos });
 		}
 	}
-
-	void Rotate()
-	{
-		if(Input.GetKey(m_rotatePitchPosKey)){
-			m_targetRB.AddTorque(  m_transform.right * m_angularSpeed );			
-		}else if(Input.GetKey(m_rotatePitchNegKey)){
-			m_targetRB.AddTorque(  - m_transform.right * m_angularSpeed );
-		}
-
-		if(Input.GetKey(m_rotateYawPosKey)){
-			m_targetRB.AddTorque( - m_transform.up * m_angularSpeed );
-		}else if(Input.GetKey(m_rotateYawNegKey)){
-			m_targetRB.AddTorque( m_transform.up * m_angularSpeed );
-		}
-	}
+	
 	
 	void FixedUpdate()
 	{
 		if(!m_grabbing)
 			return;
 		
-		if(!m_isHingeJoint)
-			Rotate();
 		
 		Grab();		
 
