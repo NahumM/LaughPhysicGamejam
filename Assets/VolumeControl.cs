@@ -8,9 +8,12 @@ public class VolumeControl : MonoBehaviour
     [SerializeField] private Volume _volume;
     [SerializeField] private Animator _animator;
     [SerializeField] private SaturationCombo[] satur;
-    void Start()
+    public void StartScenario()
     {
-        
+        _volume.weight = 0;
+        StartCoroutine(SetSaturationSmooth(satur[0]));
+        StartCoroutine(SetSaturationSmooth(satur[1]));
+        StartCoroutine(Stats(satur[1]));
     }
     
     [SerializeField] private float satSpeed = 3;
@@ -46,16 +49,5 @@ public class VolumeControl : MonoBehaviour
         }
         
     }
-
-    // Update is called once per frame
-    void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.T))
-        {
-            _volume.weight = 0;
-            StartCoroutine(SetSaturationSmooth(satur[0]));
-            StartCoroutine(SetSaturationSmooth(satur[1]));
-            StartCoroutine(Stats(satur[1]));
-        }
-    }
+    
 }

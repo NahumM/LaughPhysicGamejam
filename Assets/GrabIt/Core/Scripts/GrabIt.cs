@@ -107,11 +107,22 @@ public class GrabIt : MonoBehaviour {
 
 			if(Input.GetMouseButtonDown(0))
 			{
+				RaycastHit hitInfo2;
+				if(Physics.Raycast(m_transform.position , m_transform.forward , out hitInfo2 , m_grabMaxDistance , LayerMask.GetMask("Button") ))
+				{
+					Debug.Log(hitInfo2.transform.gameObject.name);
+					hitInfo2.transform.GetComponent<LockerButton>().Push();
+					return;
+				}
 				RaycastHit hitInfo;
 				if(Physics.Raycast(m_transform.position , m_transform.forward , out hitInfo , m_grabMaxDistance , m_collisionMask ))
 				{
 					Rigidbody rb = hitInfo.collider.GetComponent<Rigidbody>();
-					if(rb != null){							
+					if(rb != null){
+						if (rb.gameObject.layer == LayerMask.GetMask("GrabDuck"))
+						{
+							rb.isKinematic = false;
+						}
 						Set( rb , hitInfo.distance);						
 						m_grabbing = true;
 					}
@@ -122,7 +133,8 @@ public class GrabIt : MonoBehaviour {
 	}
 	
 	void Set(Rigidbody target , float distance)
-	{	
+	{
+		target.isKinematic = false;
 		m_targetRB = target;
 		m_isHingeJoint = target.GetComponent<HingeJoint>() != null;		
 

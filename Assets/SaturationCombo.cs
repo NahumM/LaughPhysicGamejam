@@ -6,6 +6,7 @@ public class SaturationCombo : MonoBehaviour
 {
     [SerializeField] private List<Material> materialsToSaturate;
     public float saturation = 1;
+    public bool update;
     void Start()
     {
         var renderers = GetComponentsInChildren<Renderer>();
@@ -26,9 +27,12 @@ public class SaturationCombo : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        foreach (var mat in materialsToSaturate)
+        if (update)
         {
-            mat.SetFloat("_Saturation", saturation);
+            foreach (var mat in materialsToSaturate)
+            {
+                mat.SetFloat("_Saturation", saturation);
+            } 
         }
     }
 }

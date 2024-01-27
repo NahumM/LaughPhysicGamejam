@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine.Events;
 
 public class Behavior : MonoBehaviour
 {
@@ -9,6 +10,10 @@ public class Behavior : MonoBehaviour
     private NavMeshAgent Agent;
     private Animator Animator;
     [SerializeField] private Rigidbody[] rbToTurn;
+    [SerializeField] private UnityEvent buttonPush;
+    [SerializeField] private VolumeControl _volumeControl;
+    [SerializeField] private GameObject opener;
+    [SerializeField] private SaturationCombo _sat;
 
     void Start()
     {
@@ -18,12 +23,15 @@ public class Behavior : MonoBehaviour
         // Update is called once per frame
     }
 
-    void Update()
+    public void OnButtonPush()
     {
-        if (Input.GetKeyDown(KeyCode.T))
-        {
-            StartCoroutine(DanceCor());
-        }
+        buttonPush?.Invoke();
+    }
+
+    public void StartScenario()
+    {
+        StartCoroutine(DanceCor());
+        _volumeControl.StartScenario();
     }
 
     private IEnumerator DanceCor()
@@ -32,6 +40,7 @@ public class Behavior : MonoBehaviour
         Agent.SetDestination(pointsToGo[0].position);
         Animator.SetFloat("Beh", 1);
         yield return new WaitForSeconds(3);
+        opener.SetActive(true);
         Agent.SetDestination(pointsToGo[1].position);
         yield return new WaitForSeconds(2f);
         Agent.SetDestination(pointsToGo[2].position);
@@ -41,5 +50,7 @@ public class Behavior : MonoBehaviour
             rb.isKinematic = false;
             rb.AddForce(-rb.transform.right * 500, ForceMode.Acceleration);
         }
+        yield return new WaitForSeconds(1);
+       // _sat.saturation = 0;
     }
 }
