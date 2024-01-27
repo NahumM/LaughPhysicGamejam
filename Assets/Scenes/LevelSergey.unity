@@ -24970,7 +24970,7 @@ MonoBehaviour:
   opener: {fileID: 139813118}
   _sat: {fileID: 139813120}
   contactSound: {fileID: 8300000, guid: 4fa72a3c9df2c2c43b2af25339766f5a, type: 3}
-  dance: {fileID: 8300000, guid: 088745fad0135f8449f79361728d93de, type: 3}
+  DanceSound: {fileID: 8300000, guid: 088745fad0135f8449f79361728d93de, type: 3}
 --- !u!54 &1125790156
 Rigidbody:
   m_ObjectHideFlags: 0
