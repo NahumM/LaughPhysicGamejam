@@ -35,6 +35,7 @@ public class Behavior : MonoBehaviour
         StartCoroutine(DanceCor());
         _volumeControl.StartScenario();
     }
+    
 
 private IEnumerator DanceCor()
 {
@@ -69,7 +70,19 @@ private IEnumerator DanceCor()
         audioSource.Play();
     }
 
-    yield return new WaitForSeconds(0.5f);
+    yield return new WaitForSeconds(1.5f);
+    
+    foreach (var rb in rbToTurn)
+    {
+        rb.transform.GetComponent<Collider>().enabled = false;
+    }
+    
+    yield return new WaitForSeconds(1.5f);
+    
+    foreach (var rb in rbToTurn)
+    {
+        rb.gameObject.SetActive(false);
+    }
 
     // Uncomment the line below to set saturation to 0
     // _sat.saturation = 0;

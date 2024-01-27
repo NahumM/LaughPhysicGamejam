@@ -27,12 +27,9 @@ public class SaturationCombo : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (update)
+        foreach (var mat in materialsToSaturate)
         {
-            foreach (var mat in materialsToSaturate)
-            {
-                mat.SetFloat("_Saturation", saturation);
-            } 
-        }
+            mat.SetFloat("_Saturation", saturation);
+        } 
     }
 }
