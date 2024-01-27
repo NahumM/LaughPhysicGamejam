@@ -134,6 +134,10 @@ public class GrabIt : MonoBehaviour {
 	
 	void Set(Rigidbody target , float distance)
 	{
+		if (target.gameObject.tag == "ScrewDriver")
+		{
+			target.GetComponent<Screwdriver>().OnDriver();
+		}
 		target.isKinematic = false;
 		m_targetRB = target;
 		m_isHingeJoint = target.GetComponent<HingeJoint>() != null;		
