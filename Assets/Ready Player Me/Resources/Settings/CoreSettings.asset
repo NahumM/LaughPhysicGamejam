@@ -15,4 +15,4 @@ MonoBehaviour:
   Subdomain: sergeys
   AppId: 65b426f6ca0445c604e92b15
   EnableLogging: 0
-  EnableAnalytics: 0
+  EnableAnalytics: 1
