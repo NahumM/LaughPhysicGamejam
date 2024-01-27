@@ -16,6 +16,7 @@ public class Behavior : MonoBehaviour
     [SerializeField] private GameObject opener;
     [SerializeField] private SaturationCombo _sat;
     [SerializeField] private AudioClip contactSound;
+    [SerializeField] private AudioClip DanceSound;
 
     void Start()
     {
@@ -41,14 +42,23 @@ private IEnumerator DanceCor()
 {
     yield return new WaitForSeconds(1);
     Agent.SetDestination(pointsToGo[0].position);
+    
+    // Set the animation parameter "Beh" to 1
     Animator.SetFloat("Beh", 1);
+
+    // Play the dance audio clip
+    AudioSource danceAudioSource = gameObject.AddComponent<AudioSource>();
+    danceAudioSource.clip = DanceSound;
+    danceAudioSource.Play();
+
     yield return new WaitForSeconds(3);
+
     opener.SetActive(true);
     Agent.SetDestination(pointsToGo[1].position);
     yield return new WaitForSeconds(2f);
     Agent.SetDestination(pointsToGo[2].position);
     yield return new WaitForSeconds(1);
-    
+
     foreach (var rb in rbToTurn)
     {
         rb.isKinematic = false;
