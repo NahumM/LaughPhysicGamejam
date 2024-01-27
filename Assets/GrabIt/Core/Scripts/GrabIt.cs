@@ -14,12 +14,7 @@ public class GrabObjectProperties{
 }
 
 public class GrabIt : MonoBehaviour {
-
-	[Header("Input")]
-	[SerializeField] KeyCode m_rotatePitchPosKey = KeyCode.I;
-	[SerializeField] KeyCode m_rotatePitchNegKey = KeyCode.K;
-	[SerializeField] KeyCode m_rotateYawPosKey = KeyCode.L;
-	[SerializeField] KeyCode m_rotateYawNegKey = KeyCode.J;
+	
 
 	[Header("Grab properties")]
 
@@ -95,14 +90,7 @@ public class GrabIt : MonoBehaviour {
 			m_targetDistance = Mathf.Clamp(m_targetDistance , m_grabMinDistance , m_grabMaxDistance);
 
 			m_targetPos = m_transform.position + m_transform.forward * m_targetDistance;
-						
-			if(!m_isHingeJoint){
-				if(Input.GetKey(m_rotatePitchPosKey) || Input.GetKey(m_rotatePitchNegKey) || Input.GetKey(m_rotateYawPosKey) || Input.GetKey(m_rotateYawNegKey)){
-					m_targetRB.constraints = RigidbodyConstraints.None;
-				}else{
-					m_targetRB.constraints = m_grabProperties.m_constraints;
-				}
-			}
+			
 			
 
 			if( Input.GetMouseButtonUp(0) ){				
@@ -119,11 +107,22 @@ public class GrabIt : MonoBehaviour {
 
 			if(Input.GetMouseButtonDown(0))
 			{
+				RaycastHit hitInfo2;
+				if(Physics.Raycast(m_transform.position , m_transform.forward , out hitInfo2 , m_grabMaxDistance , LayerMask.GetMask("Button") ))
+				{
+					Debug.Log(hitInfo2.transform.gameObject.name);
+					hitInfo2.transform.GetComponent<LockerButton>().Push();
+					return;
+				}
 				RaycastHit hitInfo;
 				if(Physics.Raycast(m_transform.position , m_transform.forward , out hitInfo , m_grabMaxDistance , m_collisionMask ))
 				{
 					Rigidbody rb = hitInfo.collider.GetComponent<Rigidbody>();
-					if(rb != null){							
+					if(rb != null){
+						if (rb.gameObject.layer == LayerMask.GetMask("GrabDuck"))
+						{
+							rb.isKinematic = false;
+						}
 						Set( rb , hitInfo.distance);						
 						m_grabbing = true;
 					}
@@ -134,7 +133,8 @@ public class GrabIt : MonoBehaviour {
 	}
 	
 	void Set(Rigidbody target , float distance)
-	{	
+	{
+		target.isKinematic = false;
 		m_targetRB = target;
 		m_isHingeJoint = target.GetComponent<HingeJoint>() != null;		
 
@@ -193,29 +193,13 @@ public class GrabIt : MonoBehaviour {
 			m_lineRenderer.SetPositions( new Vector3[]{ m_targetPos , hitPointPos });
 		}
 	}
-
-	void Rotate()
-	{
-		if(Input.GetKey(m_rotatePitchPosKey)){
-			m_targetRB.AddTorque(  m_transform.right * m_angularSpeed );			
-		}else if(Input.GetKey(m_rotatePitchNegKey)){
-			m_targetRB.AddTorque(  - m_transform.right * m_angularSpeed );
-		}
-
-		if(Input.GetKey(m_rotateYawPosKey)){
-			m_targetRB.AddTorque( - m_transform.up * m_angularSpeed );
-		}else if(Input.GetKey(m_rotateYawNegKey)){
-			m_targetRB.AddTorque( m_transform.up * m_angularSpeed );
-		}
-	}
+	
 	
 	void FixedUpdate()
 	{
 		if(!m_grabbing)
 			return;
 		
-		if(!m_isHingeJoint)
-			Rotate();
 		
 		Grab();		
 
