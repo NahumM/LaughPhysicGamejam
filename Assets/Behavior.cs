@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.Events;
 
+
 public class Behavior : MonoBehaviour
 {
     [SerializeField] private Transform[] pointsToGo;
@@ -14,6 +15,7 @@ public class Behavior : MonoBehaviour
     [SerializeField] private VolumeControl _volumeControl;
     [SerializeField] private GameObject opener;
     [SerializeField] private SaturationCombo _sat;
+    [SerializeField] private AudioClip contactSound;
 
     void Start()
     {
@@ -34,23 +36,42 @@ public class Behavior : MonoBehaviour
         _volumeControl.StartScenario();
     }
 
-    private IEnumerator DanceCor()
+private IEnumerator DanceCor()
+{
+    yield return new WaitForSeconds(1);
+    Agent.SetDestination(pointsToGo[0].position);
+    Animator.SetFloat("Beh", 1);
+    yield return new WaitForSeconds(3);
+    opener.SetActive(true);
+    Agent.SetDestination(pointsToGo[1].position);
+    yield return new WaitForSeconds(2f);
+    Agent.SetDestination(pointsToGo[2].position);
+    yield return new WaitForSeconds(1);
+    
+    foreach (var rb in rbToTurn)
     {
-        yield return new WaitForSeconds(1);
-        Agent.SetDestination(pointsToGo[0].position);
-        Animator.SetFloat("Beh", 1);
-        yield return new WaitForSeconds(3);
-        opener.SetActive(true);
-        Agent.SetDestination(pointsToGo[1].position);
-        yield return new WaitForSeconds(2f);
-        Agent.SetDestination(pointsToGo[2].position);
-        yield return new WaitForSeconds(1);
-        foreach (var rb in rbToTurn)
+        rb.isKinematic = false;
+        rb.AddForce(-rb.transform.right * 500, ForceMode.Acceleration);
+
+        // Wait for a short duration before playing the sound
+        yield return new WaitForSeconds(0.5f);
+
+        // Check if the Rigidbody has an AudioSource component
+        AudioSource audioSource = rb.GetComponent<AudioSource>();
+        if (audioSource == null)
         {
-            rb.isKinematic = false;
-            rb.AddForce(-rb.transform.right * 500, ForceMode.Acceleration);
+            // If not, add an AudioSource component
+            audioSource = rb.gameObject.AddComponent<AudioSource>();
         }
-        yield return new WaitForSeconds(1);
-       // _sat.saturation = 0;
+
+        // Play the contact sound
+        audioSource.clip = contactSound;
+        audioSource.Play();
     }
+
+    yield return new WaitForSeconds(0.5f);
+
+    // Uncomment the line below to set saturation to 0
+    // _sat.saturation = 0;
+}
 }
