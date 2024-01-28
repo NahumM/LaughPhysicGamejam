@@ -26,6 +26,7 @@ public class TV : MonoBehaviour
     [SerializeField] private Transform player;
 
     [SerializeField] private AudioSource sergeySound;
+    [SerializeField] private AudioClip DanceSound;
     void Start()
     {
         source = GetComponent<AudioSource>();
@@ -117,6 +118,11 @@ public class TV : MonoBehaviour
         {
             beh.SetFloat("Beh", 1);
         }
+
+    // Play the dance audio clip
+    AudioSource danceAudioSource = gameObject.AddComponent<AudioSource>();
+    danceAudioSource.clip = DanceSound;
+    danceAudioSource.Play();
 
         StartCoroutine(NextLevelCor()); 
     }
