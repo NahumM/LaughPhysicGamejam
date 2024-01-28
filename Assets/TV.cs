@@ -15,6 +15,8 @@ public class TV : MonoBehaviour
     [SerializeField] private SaturationCombo combo3;
     [SerializeField] private Transform destanation;
 
+    [SerializeField] private ParticleSystem _particleSystem;
+
     [SerializeField] private Animator[] Behs;
 
     [SerializeField] private NavMeshAgent[] agents;
@@ -22,6 +24,8 @@ public class TV : MonoBehaviour
     [SerializeField] private GameObject[] wallToTurn;
 
     [SerializeField] private Transform player;
+
+    [SerializeField] private AudioSource sergeySound;
     void Start()
     {
         source = GetComponent<AudioSource>();
@@ -72,6 +76,11 @@ public class TV : MonoBehaviour
             agent.destination = destanation.position;
         }
         yield return new WaitForSeconds(10f);
+        foreach (var beh in Behs)
+        {
+            beh.SetFloat("Beh", 20);
+        }
+        sergeySound.Stop();
         StartCoroutine(FollowPlayer());
     }
 
@@ -91,9 +100,11 @@ public class TV : MonoBehaviour
 
     private void EndActions()
     {
+        _particleSystem.Play();
         rb.isKinematic = false;
         source.Stop();
         rb.AddTorque(transform.forward * 50);
+        sergeySound.Play();
         StartCoroutine(SetSaturationSmooth(combo));
         StartCoroutine(SetSaturationSmooth(combo1));
         StartCoroutine(SetSaturationSmooth(combo2));
