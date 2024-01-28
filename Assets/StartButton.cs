@@ -13,6 +13,8 @@ public class StartButton : MonoBehaviour
     [SerializeField] private GameObject donut;
     [SerializeField] private GameObject startCamera;
     [SerializeField] private GameObject character;
+
+    [SerializeField] private AmbientSoundController sound;
     public void StartGame()
     {
         foreach (var gm in turnOff)
@@ -29,6 +31,7 @@ public class StartButton : MonoBehaviour
 
     private IEnumerator StartCoroutine()
     {
+        sound.Stop();
         yield return new WaitForSeconds(2);
         _animator.SetBool("start", true);
         yield return new WaitForSeconds(5);
@@ -41,6 +44,8 @@ public class StartButton : MonoBehaviour
         startCamera.SetActive(false);
         character.SetActive(true);
         donut.SetActive(false);
+        yield return new WaitForSeconds(2);
+        sound.Play();
     }
     void Start()
     {

@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AI;
 
 public class TV : MonoBehaviour
 {
@@ -12,8 +13,15 @@ public class TV : MonoBehaviour
     [SerializeField] private SaturationCombo combo1;
     [SerializeField] private SaturationCombo combo2;
     [SerializeField] private SaturationCombo combo3;
+    [SerializeField] private Transform destanation;
 
     [SerializeField] private Animator[] Behs;
+
+    [SerializeField] private NavMeshAgent[] agents;
+
+    [SerializeField] private GameObject[] wallToTurn;
+
+    [SerializeField] private Transform player;
     void Start()
     {
         source = GetComponent<AudioSource>();
@@ -56,6 +64,31 @@ public class TV : MonoBehaviour
         }
     }
 
+    private IEnumerator NextLevelCor()
+    {
+        yield return new WaitForSeconds(2f);
+        foreach (var agent in agents)
+        {
+            agent.destination = destanation.position;
+        }
+        yield return new WaitForSeconds(10f);
+        StartCoroutine(FollowPlayer());
+    }
+
+
+    private IEnumerator FollowPlayer()
+    {
+        while (true)
+        {
+            yield return new WaitForSeconds(1);
+            foreach (var agent in agents)
+            {
+                agent.destination = player.position;
+            }
+        }
+
+    }
+
     private void EndActions()
     {
         rb.isKinematic = false;
@@ -65,10 +98,16 @@ public class TV : MonoBehaviour
         StartCoroutine(SetSaturationSmooth(combo1));
         StartCoroutine(SetSaturationSmooth(combo2));
         StartCoroutine(SetSaturationSmooth(combo3));
+        foreach (var wall in wallToTurn)
+        {
+            wall.SetActive(false);
+        }
         foreach (var beh in Behs)
         {
             beh.SetFloat("Beh", 1);
         }
+
+        StartCoroutine(NextLevelCor()); 
     }
 
 }

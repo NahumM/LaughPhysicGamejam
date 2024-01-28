@@ -23,6 +23,16 @@ public class AmbientSoundController : MonoBehaviour
         StartCoroutine(MonitorCondition());
     }
 
+    public void Stop()
+    {
+        audioSource.Stop();
+    }
+
+    public void Play()
+    {
+        audioSource.Play();
+    }
+
     private IEnumerator MonitorCondition()
     {
         bool hasReachedBehThreshold = false;

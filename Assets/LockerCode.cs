@@ -17,6 +17,10 @@ public class LockerCode : MonoBehaviour
 
     [SerializeField] private GameObject go;
 
+    [SerializeField] private Rigidbody rb;
+
+    [SerializeField] private GameObject[] ducks;
+
     public void CodeNumber(float number)
     {
         goingRight = number == code[currentNumber];
@@ -39,7 +43,16 @@ public class LockerCode : MonoBehaviour
 
     private void Open()
     {
+        foreach (var duck in ducks)
+        {
+            duck.SetActive(true);
+        }
+
         go.SetActive(false);
+       // rb.transform.GetComponent<Collider>().enabled = true;
+        //rb.isKinematic = false;
+        //rb.AddForce(transform.forward * 400);
+       // rb.gameObject.layer = 6;
     }
 
 
